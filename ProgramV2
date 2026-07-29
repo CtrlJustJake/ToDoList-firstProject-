@@ -93,6 +93,10 @@ namespace ToDoList
                             string userConfirm = Console.ReadLine().Trim().ToUpper();
                             if (userConfirm == "Y")
                             {
+                                foreach (Task userTask in ToDoList.Where(t => t.TaskNumber > selectedTask.TaskNumber))
+                                {
+                                    userTask.TaskNumber -= 1;
+                                }
                                 ToDoList.Remove(selectedTask);
                                 continue;
                             }
