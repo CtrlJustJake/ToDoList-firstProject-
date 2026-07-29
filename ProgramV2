@@ -1,0 +1,119 @@
+using System;
+using System.Linq;
+using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
+using System.Reflection.Metadata;
+
+namespace ToDoList
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            bool IsRunning = true; // While Loop run condition
+
+            List<Task> ToDoList = new List<Task>();
+
+            static void DisplayList(List<Task> ToDoList)
+            {
+                foreach (Task userTask in ToDoList)
+                {
+                    Console.WriteLine($"{userTask.TaskNumber}: {userTask.TaskTitle}: {userTask.TaskDescription}\n");
+                }
+            }
+            while (IsRunning) // Beginning of While Loop, MAIN APPLICATION
+            {
+                Console.Clear();
+
+                DisplayList(ToDoList);
+
+                Console.Write($"---CtrlJustJake's ToDoList Project V.2---\n--- Main Menu ---\nWhat would you like to do? \n1. Create A New Task \n2. Modify A Task \n3. Delete A Task \n4. Exit Application\n");
+
+                int currentCount = ToDoList.Count;
+
+                string userResponse = Console.ReadLine().Trim().ToUpper();
+                if (string.IsNullOrWhiteSpace(userResponse)) { Console.WriteLine("Invalid Input \nPlease try again"); }
+
+                switch (userResponse)
+                {
+                    case "1": // Create a new task
+                        {
+                            Console.Clear();
+                            Console.WriteLine("Let's create a new task: \n");
+                            Task userTask = Task.CreateTask(currentCount);
+                            ToDoList.Add(userTask);
+                            break;
+                        }
+                    case "2": // Modify an existing task
+                        {
+                            Console.Clear();
+                            Console.WriteLine("Which task would you like to modify? ");
+
+                            DisplayList(ToDoList);
+
+                            userResponse = Console.ReadLine().Trim().ToUpper();
+
+                            int.TryParse(userResponse, out int userTaskSelection);
+
+                            Task selectedTask = ToDoList.FirstOrDefault(t => t.TaskNumber == userTaskSelection);
+
+                            Console.WriteLine($"You selected {selectedTask.TaskTitle}\n1. Edit Title \n2. Edit Description ");
+                            userResponse = Console.ReadLine().Trim().ToUpper();
+
+                            if (userResponse == "1")
+                            {
+                                Console.WriteLine("What would you like to name this task? \n");
+                                selectedTask.TaskTitle = Console.ReadLine().Trim();
+                            }
+                            else if (userResponse == "2")
+                            {
+                                Console.WriteLine("How would you like to describe this task? \n");
+                                selectedTask.TaskDescription = Console.ReadLine().Trim();
+
+                            }
+                            else { Console.WriteLine("Invalid Input, Please Try Again... \n"); }
+
+                            break;
+                        }
+                    case "3": // Delete a Task off the lsit
+                        {
+                            Console.Clear();
+                            Console.WriteLine("Which task would you like to remove? ");
+                            DisplayList(ToDoList);
+
+                            userResponse = Console.ReadLine().Trim().ToUpper();
+                            int.TryParse(userResponse, out int userTaskSelection);
+
+                            Task selectedTask = ToDoList.FirstOrDefault(t => t.TaskNumber == userTaskSelection);
+
+                            Console.WriteLine($"Remove {selectedTask.TaskNumber}: {selectedTask.TaskTitle}?");
+
+                            Console.WriteLine("Are you sure you want to delete this item?\n(Y/N)");
+
+                            string userConfirm = Console.ReadLine().Trim().ToUpper();
+                            if (userConfirm == "Y")
+                            {
+                                ToDoList.Remove(selectedTask);
+                                continue;
+                            }
+                            else if (userConfirm == "N")
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid Input, please try again");
+                                Console.ReadKey();
+                                continue;
+                            }
+                        }
+                    case "4": // Close console application
+                        {
+                            IsRunning = false;
+                            break;
+                        }
+                }
+            }
+        }
+    }
+}
