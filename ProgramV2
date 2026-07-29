@@ -75,7 +75,7 @@ namespace ToDoList
 
                             break;
                         }
-                    case "3": // Delete a Task off the lsit
+                    case "3": // Delete a Task off the list. Need to update how userTask.TaskNumber is updated when tasks are deleted.
                         {
                             Console.Clear();
                             Console.WriteLine("Which task would you like to remove? ");
